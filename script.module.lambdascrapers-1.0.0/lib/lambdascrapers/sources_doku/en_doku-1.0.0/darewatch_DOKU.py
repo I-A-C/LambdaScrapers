@@ -46,7 +46,6 @@ class source:
                 (title.lower(),) + tuple((alias['title'].lower() for alias in aliases) if aliases else ())
             )
             json_data = self._ajax_post(title.lower())
-            print(asdf)
             for entry in json_data:
                 if 'movie' in entry['meta'].lower():
                     if entry['title'].lower() in possible_titles:
