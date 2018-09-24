@@ -41,6 +41,13 @@ class source:
         # Path to retrieve an unresolved host, to be sent to the ResolveURL plugin.
         self.INFO_PATH = '/ajax/episode/info?ts=%s&_=%i&id=%s&server=%s&update=0'
 
+        # Used in sources() to map lowercase host names to debrid-friendly host names.
+        self.DEBRID_HOSTS = {
+            'openload': 'openload.co',
+            'rapidvideo': 'rapidvideo.com',
+            'streamango': 'streamango.com'
+        }
+
 
     def movie(self, imdb, title, localtitle, aliases, year):
         try:
@@ -138,7 +145,8 @@ class source:
             soup = BeautifulSoup(serversHTML, 'html.parser')
             for serverDIV in soup.div.findAll('div', {'class': 'server row', 'data-id': True}, recursive=False):
                 tempTokenData['server'] = serverDIV['data-id']
-                hostName = serverDIV.label.text.strip()
+                hostName = serverDIV.label.text.strip().lower()
+                hostName = self.DEBRID_HOSTS.get(hostName, hostName)
 
                 for a in serverDIV.findAll('a', {'data-id': True}):
                     # The text in the <a> tag can be the movie quality ("HDRip", "CAM" etc.) or for TV shows
@@ -314,7 +322,7 @@ class source:
 
 
     def _logException(self, text=None):
-        return # (Un)Comment this line to (not) output errors in the Kodi log, useful for debugging this script.
+        #return # (Un)Comment this line to (not) output errors in the Kodi log, useful for debugging this script.
         # ------------------
         if text:
             xbmc.log(text, xbmc.LOGERROR)
@@ -409,7 +417,7 @@ class source:
         return s
 
 
-# ==================================================================================================        
+# ==================================================================================================
 # Cloudflare scraper taken from Team Universal's UniversalScrapers. It extends 'requests.Session'.
 # https://github.com/teamuniversal/scrapers/tree/master/_modules4all/script.module.universalscrapers
 # (The local one from resources.lib.modules.client wasn't working.)
