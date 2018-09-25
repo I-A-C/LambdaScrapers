@@ -322,7 +322,7 @@ class source:
 
 
     def _logException(self, text=None):
-        #return # (Un)Comment this line to (not) output errors in the Kodi log, useful for debugging this script.
+        return # (Un)Comment this line to (not) output errors in the Kodi log, useful for debugging this script.
         # ------------------
         if text:
             xbmc.log(text, xbmc.LOGERROR)
