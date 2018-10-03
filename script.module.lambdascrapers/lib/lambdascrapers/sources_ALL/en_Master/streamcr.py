@@ -126,7 +126,7 @@ class source:
 
     def resolve(self, url):
         # The replace() call below is a silly way to circumvent a problem in sourcesResolve().
-        # See the sourcesResolve() function in /modules/client.py at line "elif url.startswith('http'):".
+        # See the sourcesResolve() function in /modules/sources.py at line "elif url.startswith('http'):".
         # The client.request call was failing.
         return url.replace('http', 'HTTP', 1)
 
