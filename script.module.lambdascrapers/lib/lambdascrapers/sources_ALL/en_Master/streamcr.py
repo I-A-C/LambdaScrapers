@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 '''
     StreamCR scraper for Exodus forks.
-    Oct 3 2018
+    Oct 6 2018
 
     Created by someone.
 '''
@@ -29,18 +29,13 @@ class source:
         self.domains = ['scr.cr']
 
         self.BASE_URL = 'https://scr.cr'
-        self.SEARCH_URL = '/search.php?query=%s'
+        self.SEARCH_URL = self.BASE_URL + '/search.php?query=%s'
         self.AJAX_URL = 'https://ajax2.scr.cr/get-source.php?eid=%s'
 
 
     def movie(self, imdb, title, localtitle, aliases, year):
         try:
-            lowerTitle = title.lower()
-            possibleTitles = set(
-                (lowerTitle, getsearch(lowerTitle))
-                + tuple((alias['title'].lower() for alias in aliases) if aliases else ())
-            )
-            return self._getSearchData(lowerTitle, possibleTitles, self._createSession(), season=None, episode=None)
+            return self._getSearchData(title, aliases, year, None, None, self._createSession())
         except:
             self._logException()
             return None
@@ -48,7 +43,7 @@ class source:
 
     def tvshow(self, imdb, tvdb, tvshowtitle, localtvshowtitle, aliases, year):
         try:
-            return tvshowtitle.lower(), aliases
+            return tvshowtitle, aliases, year
         except:
             self._logException()
             return None
@@ -56,12 +51,8 @@ class source:
 
     def episode(self, data, imdb, tvdb, title, premiered, season, episode):
         try:
-            lowerTitle, aliases = data
-            possibleTitles = set(
-                (lowerTitle, getsearch(lowerTitle))
-                + tuple((alias['title'].lower() for alias in aliases) if aliases else ())
-            )
-            return self._getSearchData(lowerTitle, possibleTitles, self._createSession(), int(season), int(episode))
+            title, aliases, year = data
+            return self._getSearchData(title, aliases, year, int(season), int(episode), self._createSession())
         except:
             self._logException()
             return None
@@ -81,7 +72,7 @@ class source:
 
             soup = BeautifulSoup(r.content, 'html.parser')
             mainUL = soup.find('div', class_='wpbc-server').ul
-            if 'episode' in data:
+            if data['episode'] != -1:
                 # This is a season page for a TV show. Find the link to the right episode.
                 episodeNumber = data['episode']
                 for a in mainUL.findAll('a'):
@@ -91,8 +82,7 @@ class source:
                         itemA = a
                         break
             else:
-                # It's a movie page. Use the only link available.
-                itemA = mainUL.a
+                itemA = mainUL.a # It's a movie page. Use the only link available.
 
             # Resolve the item right now.
             if itemA:
@@ -126,7 +116,7 @@ class source:
 
     def resolve(self, url):
         # The replace() call below is a silly way to circumvent a problem in sourcesResolve().
-        # See the sourcesResolve() function in /modules/sources.py at line "elif url.startswith('http'):".
+        # See the sourcesResolve() function in /modules/client.py at line "elif url.startswith('http'):".
         # The client.request call was failing.
         return url.replace('http', 'HTTP', 1)
 
@@ -135,7 +125,7 @@ class source:
         try:
             startTime = datetime.now() if delayAmount else 0
             r = session.get(url, timeout=8)
-            
+
             if delayAmount:
                 elapsed = int((datetime.now() - startTime).total_seconds() * 1000)
                 if elapsed < delayAmount and elapsed > 100:
@@ -160,50 +150,60 @@ class source:
         )
         if 'cookies' in customHeaders:
             session.cookies.update(customHeaders['cookies'])
-        return session         
-   
+        return session
 
-    def _getSearchData(self, lowerTitle, possibleTitles, session, season, episode):
+
+    def _getSearchData(self, title, aliases, year, season, episode, session):
         try:
-            searchURL = self.BASE_URL + (self.SEARCH_URL % quote_plus(lowerTitle))
+            lowerTitle = title.lower()
+            searchURL = self.SEARCH_URL % quote_plus(lowerTitle)
             r = self._sessionGET(searchURL, session, 1000)
             if not r.ok:
                 return None
 
-            isMovie = (episode == None)            
             soup = BeautifulSoup(r.content, 'html.parser')
             mainDIV = soup.find('div', class_='main-content')
+            isMovie = (episode == None)
+            possibleTitles = set(
+                (lowerTitle,) + tuple((alias['title'].lower() for alias in aliases) if aliases else ())
+            )
+
+            bestGuesses = [ ]
+
             for a in mainDIV.findAll('a'):
-                title = a.h2.text.lower()
-                
-                if isMovie:
-                    if 'season' in title:
-                        continue
-                else:
-                    if 'season' in title:
-                        titleWords = title.split()
-                        lenWords = len(titleWords)
-                        match = re.search(r' - season (.*?)$', title)
+                itemTitle = a.h2.text.lower()
+
+                if 'season' in itemTitle:
+                    if isMovie:
+                        return # Ignore TV show items when we're searching for a movie.
+                    else:
+                        # Test if this item represents the season we're looking for.
+                        # TV show items are named "[TV show name] - Season n".
+                        match = re.search(r' - season (.*?)$', itemTitle, re.IGNORECASE)
                         if match and int(match.group(1)) == season:
-                            title = re.sub(r'(.*?) - season .*', r'\1', title)
+                            itemTitle = re.sub(r'(.*?) - season .*', r'\1', itemTitle, re.IGNORECASE)
                         else:
                             continue
+
+                if itemTitle == title or itemTitle in possibleTitles:
+                    if year in itemTitle:
+                        bestGuesses.insert(0, a['href']) # Give higher priority when the year is in the title.
                     else:
-                        continue
-                
-                if title == lowerTitle or title in possibleTitles or getsearch(title) in possibleTitles:
-                    data = {
-                        'pageURL': self.BASE_URL + a['href'],
-                        'headers': {
-                            'UA': session.headers['User-Agent'],
-                            'referer': searchURL,
-                            'cookies': session.cookies.get_dict(),
-                        }
-                    }
-                    if episode:
-                        data['episode'] = episode # Send only the episode number, the season is implicit in the URL.              
-                    return data                    
-            return None # No results found.
+                        bestGuesses.append(a['href']) # Append to the list of best guesses.
+
+            if bestGuesses:
+                data = {
+                    'pageURL': self.BASE_URL + bestGuesses[0],
+                    'headers': {
+                        'UA': session.headers['User-Agent'],
+                        'referer': searchURL,
+                        'cookies': session.cookies.get_dict(),
+                    },
+                    'episode': episode if episode else -1 # Send the episode number. The season is implicit in the URL.
+                }
+                return data
+            else:
+                return None # No results found.
         except:
             self._logException()
             return None
