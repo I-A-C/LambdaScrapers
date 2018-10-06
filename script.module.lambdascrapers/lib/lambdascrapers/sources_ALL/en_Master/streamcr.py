@@ -51,8 +51,8 @@ class source:
 
     def episode(self, data, imdb, tvdb, title, premiered, season, episode):
         try:
-            title, aliases, year = data
-            return self._getSearchData(title, aliases, year, int(season), int(episode), self._createSession())
+            tvshowtitle, aliases, year = data
+            return self._getSearchData(tvshowtitle, aliases, year, int(season), int(episode), self._createSession())
         except:
             self._logException()
             return None
