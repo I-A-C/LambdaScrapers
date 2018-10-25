@@ -16,7 +16,6 @@
         <setting label="Lambda Scrapers Default" type="action" option="close" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=Defaults&amp;setting=true&amp;open_id='1.2')"/>
         <setting type="sep" />
         <setting id="provider.1movie" type="bool" label="$NUMBER[1]MOVIE" default="false" />
-        <setting id="provider.2ddl" type="bool" label="$NUMBER[2]DDL" default="false" />
         <setting id="provider.4kmovieto" type="bool" label="$NUMBER[4]KMOVIETO" default="false" />
         <setting id="provider.123fox" type="bool" label="$NUMBER[123]FOX" default="false" /> <!--Placenta-->
         <setting id="provider.123hbo" type="bool" label="$NUMBER[123]HBO" default="false" /> <!--Placenta-->
@@ -67,7 +66,7 @@
         <setting id="provider.hd" type="bool" label="HD" default="false" /> <!--Placenta-->
         <setting id="provider.hdmega" type="bool" label="HDMEGA" default="false" /> <!--Placenta-->
         <setting id="provider.hdmto" type="bool" label="HDMTO" default="false" />
-        <setting id="provider.hdpopcorns" type="bool" label="HDPOPCORNS" default="false" />
+        <setting id="provider.hdpopcorns" type="bool" label="HDPOPCORNS" default="false" /> <!--Jewbmx-->
         <setting id="provider.hulufilm" type="bool" label="HULUFILM" default="false" /> <!--Yoda-->
         <setting id="provider.huluvip" type="bool" label="HULUVIP" default="false" /> <!--Placenta-->
         <setting id="provider.icefilms" type="bool" label="ICEFILMS" default="false" />
@@ -132,6 +131,7 @@
         <setting id="provider.tvbox" type="bool" label="TVBOX" default="false" />
         <setting id="provider.uhd" type="bool" label="UHD" default="false" /> <!--Placenta-->
         <setting id="provider.videoscraper" type="bool" label="VIDEOSCRAPER" default="false" />
+        <setting id="provider.vidics" type="bool" label="VIDICS" default="false" /><!-- test-->
         <setting id="provider.vioozfree" type="bool" label="VIOOZFREE" default="false" /> <!--Yoda-->
         <setting id="provider.vodly" type="bool" label="VODLY" default="false" />
         <setting id="provider.watch32" type="bool" label="WATCH32" default="false" />
@@ -207,6 +207,7 @@
         <setting label="Disable All Debrid Providers" type="action" option="close" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=toggleAllDebrid&amp;setting=false&amp;open_id='1.1')"/>
         <setting label="Enable All Debrid Providers" type="action" option="close" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=toggleAllDebrid&amp;setting=true&amp;open_id='1.2')"/>
         <setting type="sep" />
+        <setting id="provider.2ddl" type="bool" label="$NUMBER[2]DDL" default="false" /> <!--Jewbmx-->
         <setting id="provider.300mbfilms" type="bool" label="$NUMBER[300]MBFILMS" default="false" />
         <setting id="provider.bestmoviez" type="bool" label="BESTMOVIEZ" default="false" />
 <!--        <setting id="provider.ddls" type="bool" label="DDLS" default="false" />--> <!--Yoda-->
@@ -215,7 +216,7 @@
         <setting id="provider.gomovies" type="bool" label="GOMOVIE" default="false" />
 <!--        <setting id="provider.hevcfilm" type="bool" label="HEVCFILM" default="false" />--> <!--Yoda-->
         <setting id="provider.moviesonline" type="bool" label="MOVIESONLINE" default="false" />
-        <setting id="provider.myvideolink" type="bool" label="MYVIDEOLINK" default="false" />
+        <setting id="provider.myvideolink" type="bool" label="MYVIDEOLINK" default="false" /> <!--Jewbmx-->
         <setting id="provider.phazeddl" type="bool" label="PHAZEDLL" default="false" />
         <setting id="provider.power" type="bool" label="POWER" default="false" />
 <!--        <setting id="provider.releasebb" type="bool" label="RELEASEBB" default="false" />-->

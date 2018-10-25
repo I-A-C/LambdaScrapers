@@ -49,7 +49,7 @@ if mode == "toggleAll":
     toggleAll(params['setting'], open_id, sourceList=sourcelist)
 
 if mode == "toggleAllDebrid":
-    sourcelist = ['300mbfilms','bestmoviez','ddls','ddlvalley','directdl','gomovies','hevcfilm',
+    sourcelist = ['2ddl','300mbfilms','bestmoviez','ddls','ddlvalley','directdl','gomovies','hevcfilm',
     'moviesonline','myvideolink','phazeddl','power','releasebb','RLSB','rlsbb','rlsmovies','rlsscn',
     'scenerls','sceper','seriescr','tvbmoviez','tvrelease','ultrahd','ultrahdindir','wrzcraft']
     toggleAll(params['setting'], params['open_id'], sourcelist)
@@ -78,13 +78,13 @@ if mode == "toggleAllForeign":
     toggleAll(params['setting'], params['open_id'], sourcelist)
 
 if mode == "Defaults":
-    sourcelist = ['1080P','123movies','123moviesgold','123netflix','1movie','2ddl',
-    '4kmovieto','Hdmto','afdah','allrls','allucen','animeultima','bmoviez','bnwmovies','bob',
-    'cmovies','coolmoviezone','cooltv','darewatch','divxcrawler','dltube','einthusan',
-    'filmxy','flenix','flixanity','freefmovies','freeputlockers','furk','genvideos','gogoanime',
-    'gowatchseries','hdpopcorns','icefilms','icouchtuner','kattv','l23movies','library',
-    'm4ufree','megahd','movie4uch','moviesplanet','myputlock','mywatchseries','ororo',
-    'plocker','primewire','projectfree','pron','rajahoki88','seehd','series9','seriesfree',
-    'seriesonline','sezonlukdizi','showbox','solarmoviez','streamlord','tvbox','videoscraper',
+    sourcelist = ['1080P','123movies','123moviesgold','123netflix','1movie',
+    '4kmovieto','Hdmto','afdah','allrls','animeultima','bmoviez','bnwmovies','bob',
+    'cartoonhd','cmovies','coolmoviezone','cooltv','darewatch','divxcrawler','dltube','einthusan',
+    'filmxy','flenix','flixanity','fmovies','freefmovies','freeputlockers','furk','genvideos','gogoanime',
+    'gowatchseries','hackimdb','hdpopcorns','icefilms','icouchtuner','iwatchflixxyz','kattv','l23movies','library',
+    'm4ufree','megahd','movie4uch','moviesplanet','myputlock','mywatchseries','odb','openloadmovie','ororo',
+    'plocker','popcorn','primewire','projectfree','pron','putlocker','rajahoki88','reddit','seehd','series9','seriesfree',
+    'seriesonline','sezonlukdizi','showbox','solarmoviez','streamlord','tvbox','videoscraper','vidics',
     'vodly','watch32','watchonline','watchseries','xmovies','xwatchseries','ymovies']
     toggleAll(params['setting'], params['open_id'], sourcelist)

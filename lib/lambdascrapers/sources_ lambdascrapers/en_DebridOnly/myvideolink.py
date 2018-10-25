@@ -2,15 +2,13 @@
 #######################################################################
  # ----------------------------------------------------------------------------
  # "THE BEER-WARE LICENSE" (Revision 42):
- # @Daddy_Blamo wrote this file.  As long as you retain this notice you
+ # @tantrumdev wrote this file.  As long as you retain this notice you
  # can do whatever you want with this stuff. If we meet some day, and you think
  # this stuff is worth it, you can buy me a beer in return. - Muad'Dib
  # ----------------------------------------------------------------------------
 #######################################################################
+# -Cleaned and Checked on 10-10-2018 by JewBMX in Yoda.
 
-# Addon Name: Placenta
-# Addon id: plugin.video.placenta
-# Addon Provider: Mr.Blamo
 
 import re,urllib,urlparse
 
@@ -22,9 +20,9 @@ class source:
     def __init__(self):
         self.priority = 1
         self.language = ['en']
-        self.domains = ['go.myvideolinks.net','newmyvideolink.xyz', 'beta.myvideolinks.xyz', 'videolinks.ga', 'myvideolinks.ga', 'ezfile.xyz', 'dl.myvideolinks.net']
-        self.base_link = 'http://iwantmyshow.net/'
-        self.search_link = '/post/'
+        self.domains = ['iwantmyshow.tk','myvideolinks.net']
+        self.base_link = 'http://iwantmyshow.tk'
+        self.search_link = '/?s=%s'
 
 
     def movie(self, imdb, title, localtitle, aliases, year):
@@ -156,6 +154,8 @@ class source:
         except:
             return sources
 
+
     def resolve(self, url):
         return url
+
 
