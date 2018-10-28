@@ -2,7 +2,7 @@
 <settings>
     <category label="Modules">
         <setting type="sep" />
-        <setting id="module.provider" label="Choose Module Scraper" type="action" option="close" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=ScraperChoice)" default="" />
+        <setting id="module.provider" label="Choose Module Scraper" type="action" option="close" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=ScraperChoice)" default=" Lambdascrapers" />
         <setting label="Enable All Providers (for current Module)" type="action" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=ToggleProviderAll&amp;action=EnableModuleAll)" option="close"/>
         <setting label="Disable All Providers (for current Module)" type="action" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=ToggleProviderAll&amp;action=DisableModuleAll)" option="close"/>
         <setting label="Disable All Providers" type="action" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=toggleAll&amp;setting=false&amp;open_id=1.1)" option="close"/>
@@ -146,7 +146,7 @@
         <setting id="provider.ymovies" type="bool" label="YMOVIES" default="false" />
     </category>
 
-    <category label="Foreign">
+    <category label="Foreign">\
         <setting label="Disable All Foreign Providers" type="action" option="close" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=toggleAllForeign&amp;setting=false&amp;open_id='1.1')"/>
         <setting label="Enable All Foreign Providers" type="action" option="close" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=toggleAllForeign&amp;setting=true&amp;open_id='1.2')"/>
         <setting label="German" type="lsep" />
@@ -203,7 +203,7 @@
         <setting id="provider.trt" type="bool" label="TRT" default="false" />
     </category>
 
-    <category label="Debrid Only">
+    <category label="Debrid Only">\
         <setting label="Disable All Debrid Providers" type="action" option="close" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=toggleAllDebrid&amp;setting=false&amp;open_id='1.1')"/>
         <setting label="Enable All Debrid Providers" type="action" option="close" action="RunPlugin(plugin://script.module.lambdascrapers/?mode=toggleAllDebrid&amp;setting=true&amp;open_id='1.2')"/>
         <setting type="sep" />
