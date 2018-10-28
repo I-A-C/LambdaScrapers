@@ -115,7 +115,7 @@ class source:
             r = type('FailedResponse', (object,), {'ok': False})
 
         # On some movies there's like 20+ Openload links, most of the time there's no need for so many.
-        openload_limit = 10 # Set this as the maximum amount of Openload links obtained from Darewatch.
+        openload_limit = 5 # Set this as the maximum amount of Openload links obtained from Darewatch.
 
         if r.ok:
             match = re.findall("] = '(.+?)'", r.text, re.DOTALL)
