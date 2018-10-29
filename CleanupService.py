@@ -7,9 +7,9 @@ import xbmc
 import xbmcvfs
 import xbmcaddon
 
-
-#Temporary service to TRY to make some file changes, and then remove itself.
-
+'''
+Temporary service to TRY to make some file changes, and then remove itself.
+'''
 
 ADDON = xbmcaddon.Addon()
 
