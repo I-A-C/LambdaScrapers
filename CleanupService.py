@@ -1,46 +1,65 @@
 # -*- coding: utf-8 -*-
-# CleanupService.py
+# LambdaScrapers Cleanup Service
 
 import os
+import re
 
 import xbmc
 import xbmcvfs
 import xbmcaddon
 
+from lib.lambdascrapers import getAllHosters
+from lib.lambdascrapers import providerSources
+
 '''
-Temporary service to TRY to make some file changes, and then remove itself.
+Temporary service to TRY to make some file changes, and then prevent itself from running again.
 '''
 
 ADDON = xbmcaddon.Addon()
 
-# 1) Do the actual file changes you need:
-
-profileFolder = xbmc.translatePath(ADDON.getAddonInfo('profile')).decode('utf-8')
+# 1) Do the actual housekeeping changes.
 try:
-    oldFilePath = os.path.join(profileFolder, 'settings.xml')
-    if xbmcvfs.exists(oldFilePath):
-        xbmcvfs.delete(oldFilePath)
+    profileFolderPath = xbmc.translatePath(ADDON.getAddonInfo('profile')).decode('utf-8')
+    settingsPath = os.path.join(profileFolderPath, 'settings.xml')
+
+    # We rewrite the user settings file while ignoring all obsolete providers.
+    if xbmcvfs.exists(settingsPath):
+        with open(settingsPath, 'r+') as settingsFile:
+            # Parse an XML tree from the settings file.
+            from xml.etree import ElementTree
+            tree = ElementTree.fromstring(settingsFile.read())
+            currentProviders = set(getAllHosters())
+            if len(currentProviders) > 0:
+                # Traverse the tree backwards so we can safely remove elements on the go.
+                for element in reversed(tree):
+                    id = element.get('id')
+                    if id and id.startswith('provider.') and id.split('.', 1)[1] not in currentProviders:
+                        tree.remove(element)
+                # Dump the cleaned up XML tree back to the file.
+                settingsFile.seek(0)
+                settingsFile.write(ElementTree.tostring(tree))
+                settingsFile.truncate()
+                                
+    # Reset obsolete module providers to Lambdascrapers.
+    if ADDON.getSetting('module.provider') not in providerSources():
+        ADDON.setSetting('module.provider', ' Lambdascrapers')
 except:
     pass
 
-# 2) Remove itself from the add-on folder, and overwrite 'addon.xml' to remove the extension point
-# that ran this service at Kodi startups.s
 
-addonRootFolder = xbmc.translatePath(ADDON.getAddonInfo('path')).decode('utf-8')
-SERVICE_FILENAME = 'CleanupService.py'
-
+# 2) Disable the service in the 'addon.xml' file.
 try:
-    serviceScriptPath = os.path.join(addonRootFolder, SERVICE_FILENAME)
-    xbmcvfs.delete(serviceScriptPath)
+    addonFolderPath = xbmc.translatePath(ADDON.getAddonInfo('path')).decode('utf-8')
+    addonXMLPath = os.path.join(addonFolderPath, 'addon.xml')
 
-    addonXMLPath = os.path.join(addonRootFolder, 'addon.xml')
-    with open(addonXMLPath, 'r+') as xmlFile:
-        originalLines = xmlFile.readlines()
-        xmlFile.seek(0)
-        for line in originalLines:
-            if SERVICE_FILENAME not in line: # Ignore the line with your service entry, accept all others.
-                xmlFile.write(line)
-        xmlFile.truncate()
-    # Now 'addon.xml' doesn't have the service extension point anymore.
+    # Disabling is done by commenting out the XML line with the service extension so it doesn't run anymore.
+    with open(addonXMLPath, 'r+') as addonXMLFile:
+        xmlText = addonXMLFile.read()
+        serviceFilename = 'CleanupService\.py'
+        pattern = r'(<\s*?extension.*?' + serviceFilename + '.*?>)'
+        updatedXML = re.sub(pattern, r'<!--\1-->', xmlText, count=1, flags=re.IGNORECASE)
+        addonXMLFile.seek(0)
+        addonXMLFile.write(updatedXML)
+        addonXMLFile.truncate()
 except:
     pass
