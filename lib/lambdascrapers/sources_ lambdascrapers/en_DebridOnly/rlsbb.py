@@ -12,6 +12,8 @@
 # Addon id: plugin.video.placenta
 # Addon Provider: Mr.Blamo
 
+# Updated for Lambdascrapers 2018-9-5
+
 import re,traceback,urllib,urlparse,json
 
 from resources.lib.modules import cleantitle
@@ -25,9 +27,9 @@ class source:
     def __init__(self):
         self.priority = 1
         self.language = ['en']
-        self.domains = ['rlsbb.com', 'rlsbb.ru']
-        self.base_link = 'http://rlsbb.ru'
-        self.search_base_link = 'http://search.rlsbb.ru'
+        self.domains = ['rlsbb.to']
+        self.base_link = 'http://rlsbb.to'
+        self.search_base_link = 'http://search.rlsbb.to'
         self.search_cookie = 'serach_mode=rlsbb'
         self.search_link = '/lib/search526049.php?phrase=%s&pindex=1&content=true'
 
@@ -91,7 +93,7 @@ class source:
             url = self.search_link % urllib.quote_plus(query)
             url = urlparse.urljoin(self.base_link, url)
 
-            url = "http://rlsbb.ru/" + query                                # this overwrites a bunch of previous lines!
+            url = "http://rlsbb.to/" + query                                # this overwrites a bunch of previous lines!
             if 'tvshowtitle' not in data: url = url + "-1080p"				# NB: I don't think this works anymore! 2b-checked. 
 
             r = client.request(url)                                         # curl as DOM object
@@ -105,16 +107,16 @@ class source:
                 query = query.replace("&", "and")
                 query = query.replace("  ", " ")
                 query = query.replace(" ", "-")
-                url = "http://rlsbb.ru/" + query
+                url = "http://rlsbb.to/" + query
                 r = client.request(url)
 
             # looks like some shows have had episodes from the current season released in s00e00 format before switching to YYYY-MM-DD
-            # this causes the second fallback search above for just s00 to return results and stops it from searching by date (ex. http://rlsbb.ru/vice-news-tonight-s02)
+            # this causes the second fallback search above for just s00 to return results and stops it from searching by date (ex. http://rlsbb.to/vice-news-tonight-s02)
             # so loop here if no items found on first pass and force date search second time around
             for loopCount in range(0,2):
                 if loopCount == 1 or (r == None and 'tvshowtitle' in data):                     # s00e00 serial failed: try again with YYYY-MM-DD
-                    # http://rlsbb.ru/the-daily-show-2018-07-24                                 ... example landing urls
-                    # http://rlsbb.ru/stephen-colbert-2018-07-24                                ... case and "date dots" get fixed by rlsbb
+                    # http://rlsbb.to/the-daily-show-2018-07-24                                 ... example landing urls
+                    # http://rlsbb.to/stephen-colbert-2018-07-24                                ... case and "date dots" get fixed by rlsbb
                     #query= re.sub('(\\\|/| -|:|;|\*|\?|"|\'|<|>|\|)','',data['tvshowtitle'])   # this RE copied from above is just trash
                     
                     premDate = re.sub('[ \.]','-',data['premiered'])                            # date looks usually YYYY-MM-DD but dunno if always
@@ -122,7 +124,7 @@ class source:
                     query = query.replace("&", " and ").replace("  ", " ").replace(" ", "-")    # throw in extra spaces around & just in case
                     query = query + "-" + premDate                      
                     
-                    url = "http://rlsbb.ru/" + query            
+                    url = "http://rlsbb.to/" + query            
                     url = url.replace('The-Late-Show-with-Stephen-Colbert','Stephen-Colbert')   # 
                     #url = url.replace('Some-Specific-Show-Title-No2','Scene-Title2')           # shows I want...
                     #url = url.replace('Some-Specific-Show-Title-No3','Scene-Title3')           #         ...but theTVDB title != Scene release
