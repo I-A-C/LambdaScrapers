@@ -78,13 +78,12 @@ if mode == "toggleAllForeign":
     toggleAll(params['setting'], params['open_id'], sourcelist)
 
 if mode == "Defaults":
-    sourcelist = ['1080P','123movies','123moviesgold','123netflix','1movie',
-    '4kmovieto','Hdmto','afdah','allrls','animeultima','bmoviez','bnwmovies','bob',
-    'cartoonhd','cmovies','coolmoviezone','cooltv','darewatch','divxcrawler','dltube','einthusan',
-    'filmxy','flenix','flixanity','fmovies','freefmovies','freeputlockers','furk','genvideos','gogoanime',
-    'gowatchseries','hackimdb','hdpopcorns','icefilms','icouchtuner','iwatchflixxyz','kattv','l23movies','library',
-    'm4ufree','megahd','movie4uch','moviesplanet','myputlock','mywatchseries','odb','openloadmovie','ororo',
-    'plocker','primewire','projectfree','pron','putlocker','rajahoki88','reddit','seehd','series9','seriesfree',
-    'seriesonline','sezonlukdizi','showbox','solarmoviez','streamlord','tvbox','videoscraper','vidics',
-    'vodly','watch32','watchonline','watchseries','xmovies','xwatchseries','ymovies']
+    sourcelist = ['4kmovieto','Hdmto','bnwmovies',
+    'cartoonhd','coolmoviezone','darewatch','divxcrawler',
+    'fmovies','freefmovies','freeputlockers','furk',
+    'gowatchseries','hackimdb','hdpopcorns','iwatchflixxyz','kattv','library',
+    'moviesplanet','odb','openloadmovie','ororo',
+    'plocker','primewire','putlocker','reddit','seehd','series9','seriesfree',
+    'seriesonline','streamlord','tvbox','videoscraper','vidics',
+    'watchonline','watchseries','xmovies','xwatchseries','ymovies']
     toggleAll(params['setting'], params['open_id'], sourcelist)
