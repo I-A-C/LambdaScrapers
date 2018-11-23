@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 '''
     plocker scraper for Exodus forks.
+    Nov 23 2018 - Checked and Changed
     Nov 9 2018 - Checked
     Nov 06 2018 - Cleaned and Checked
-    Sep 22 2018 - Cleaned and Checked
 
     Updated and refactored by someone.
     Originally created by others.
@@ -20,6 +20,7 @@ except ImportError:
 import xbmc
 
 from resources.lib.modules.client import randomagent
+from resources.lib.modules import control
 
 
 class source:
@@ -29,6 +30,7 @@ class source:
         self.domains = ['putlocker.se', 'putlockertv.to']
         self.base_link = 'https://www6.putlockertv.to'
 
+        self.ALL_JS_PROPERTY = 'lambdascrapers.plocker.allJS'
         self.ALL_JS_PATTERN = '<script src=\"(/assets/min/public/all.js?.*?)\"'
         self.DEFAULT_ACCEPT = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
 
@@ -266,12 +268,15 @@ class source:
         homepageHTML = r.text
         timeStamp = self._getTimeStamp(homepageHTML)
 
-        # Get the minified main javascript file.
-        jsPath = re.search(self.ALL_JS_PATTERN, homepageHTML, re.DOTALL).group(1)
-        session.headers['Accept'] = '*/*' # Use the same 'Accept' for JS files as web browsers do.
-        xbmc.sleep(200)
-        allJS = self._sessionGET(self.BASE_URL + jsPath, session).text
-        session.headers['Accept'] = self.DEFAULT_ACCEPT
+        allJS = control.window.getProperty(self.ALL_JS_PROPERTY)
+        if not allJS:
+            # Get the minified main javascript file.
+            xbmc.sleep(200)
+            jsPath = re.search(self.ALL_JS_PATTERN, homepageHTML, re.DOTALL).group(1)
+            session.headers['Accept'] = '*/*' # Use the same 'Accept' for JS files as web browsers do.
+            allJS = self._sessionGET(self.BASE_URL + jsPath, session).text
+            control.window.setProperty(self.ALL_JS_PROPERTY, allJS)
+            session.headers['Accept'] = self.DEFAULT_ACCEPT
 
         # Some unknown cookie flag that they use, set after 'all.js' is loaded.
         # Doesn't seem to make a difference, but it might help with staying unnoticed.
